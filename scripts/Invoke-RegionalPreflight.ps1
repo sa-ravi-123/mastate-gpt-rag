@@ -590,7 +590,7 @@ if (-not [string]::IsNullOrWhiteSpace($primaryLocation)) {
 
 if (-not $SkipAzureCliChecks -and -not [string]::IsNullOrWhiteSpace($SubscriptionId) -and -not [string]::IsNullOrWhiteSpace($primaryLocation)) {
     if ($deployVm -or $deployJumpbox) {
-        $vmSize = Get-ParameterValue -Parameters $parameters -Name 'vmSize' -DefaultValue 'Standard_D2s_v3'
+        $vmSize = Get-ParameterValue -Parameters $parameters -Name 'vmSize' -DefaultValue 'Standard_D2s_v7'
         Test-ComputeQuota -Location $primaryLocation -VmSize $vmSize
     }
     if ($networkIsolation -or $deployVm -or $deployJumpbox -or $deployBastion -or $deployNatGateway) {

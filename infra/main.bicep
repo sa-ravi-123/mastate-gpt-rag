@@ -901,7 +901,7 @@ param vmUserName string = ''
 param vmAdminPassword string
 
 @description('Size of the test VM')
-param vmSize string = 'Standard_D2s_v5'
+param vmSize string = 'Standard_D2s_v7'
 
 @description('Image SKU (e.g., 2022-datacenter-azure-edition, win11-25h2-ent).')
 param vmImageSku string = '2022-datacenter-azure-edition'
@@ -1479,9 +1479,9 @@ module firewall 'modules/networking/azure-firewall.bicep' = {
     location: location
     tags: _tags
     virtualNetworkResourceId: virtualNetworkResourceId
-    //azureFirewallSubnetName: azureFirewallSubnetName
+    azureFirewallSubnetName: 'AzureFirewallSubnet'
     jumpboxSubnetPrefix: jumpboxSubnetPrefix
-    //devopsBuildAgentsSubnetPrefix: devopsBuildAgentsSubnetPrefix
+    devopsBuildAgentsSubnetPrefix: '192.168.143.232/29'
     acaEnvironmentSubnetPrefix: acaEnvironmentSubnetPrefix
     agentSubnetPrefix: agentSubnetPrefix
     hasEffectiveLaw: _hasEffectiveLaw
@@ -2264,8 +2264,8 @@ module aiFoundry 'modules/ai-foundry/main.bicep' = if (deployAiFoundry) {
 
 
 var varPeSubnetId = empty(existingVnetResourceId!)
-  ? '${virtualNetworkResourceId}/subnets/pe-subnet'
-  : '${existingVnetResourceId!}/subnets/pe-subnet'
+  ? '${virtualNetworkResourceId}/subnets/${peSubnetName}'
+  : '${existingVnetResourceId!}/subnets/${peSubnetName}'
 
 var varAfNetworkingOverride = _networkIsolation
   ? (policyManagedPrivateDns
@@ -2992,7 +2992,7 @@ var searchFoundrySharedPrivateLinkResources = (_networkIsolation && deploySearch
         requestMessage: 'Allow AI Search private access to Microsoft Foundry for Foundry IQ.'
       }
       {
-        name: 'spl-${resourceNames.searchServiceName}-cognitiveservices_account-1'
+        name: 'spl-${resourceNames.searchServiceName}-cogsvc-1'
         groupId: 'cognitiveservices_account'
         requestMessage: 'Allow AI Search private access to Cognitive Services for Foundry IQ standard extraction.'
       }
